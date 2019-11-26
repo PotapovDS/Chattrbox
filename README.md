@@ -1,2 +1,2 @@
 # Chattrbox
-Chat
+Chat  = browser app + server
