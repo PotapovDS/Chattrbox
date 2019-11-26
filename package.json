@@ -1,0 +1,24 @@
+{
+  "name": "chattrbox",
+  "version": "1.0.0",
+  "description": "chat",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DecaDenZ/Chattrbox.git"
+  },
+  "author": "Denis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DecaDenZ/Chattrbox/issues"
+  },
+  "homepage": "https://github.com/DecaDenZ/Chattrbox#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.1"
+  }
+}
