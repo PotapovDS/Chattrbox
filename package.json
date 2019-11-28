@@ -20,5 +20,8 @@
   "homepage": "https://github.com/DecaDenZ/Chattrbox#readme",
   "devDependencies": {
     "nodemon": "^2.0.1"
+  },
+  "dependencies": {
+    "mime": "^2.4.4"
   }
 }
