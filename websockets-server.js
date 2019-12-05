@@ -1,6 +1,7 @@
 'use strict';
 var WebSocket = require('ws');
 var WebSocketServer = WebSocket.Server;
+var chatBot = require('./src/chatbot');
 var port = 3001;
 var ws = new WebSocketServer({
    port: port
@@ -11,6 +12,7 @@ var messages = []; // хранилище сообщений
 
 console.log('websockets server started');
 
+
 function sendMessageArchive(socket) { //рассылаем архив сообщений новому подключению
    messages.forEach((msg) => {
       socket.send(msg);
@@ -19,6 +21,8 @@ function sendMessageArchive(socket) { //рассылаем архив сообщ
 
 ws.on('connection', (socket) => {
    console.log('client connection established');
+
+   chatBot.hello(socket);
    socket.send('enter the password');
 
    if (socket.isAuthorized) {
