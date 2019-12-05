@@ -1,3 +1,4 @@
+'use strict';
 var http = require('http');
 var extract = require('./extract');
 var readFile = require('./src/readFile');
