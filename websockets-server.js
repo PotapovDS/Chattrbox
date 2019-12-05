@@ -12,8 +12,7 @@ var messages = []; // хранилище сообщений
 
 console.log('websockets server started');
 
-
-function sendMessageArchive(socket) { //рассылаем архив сообщений новому подключению
+function sendMessagesArchive(socket) { //рассылаем архив сообщений новому подключению
    messages.forEach((msg) => {
       socket.send(msg);
    });
@@ -22,11 +21,11 @@ function sendMessageArchive(socket) { //рассылаем архив сообщ
 ws.on('connection', (socket) => {
    console.log('client connection established');
 
-   chatBot.hello(socket);
+   chatBot.sayHelloToNewUser(socket);
    socket.send('enter the password');
 
    if (socket.isAuthorized) {
-      sendMessageArchive(socket);
+      sendMessagesArchive(socket);
    };
 
    // эхо сервер
@@ -36,7 +35,7 @@ ws.on('connection', (socket) => {
          if (data === password) {
             socket.isAuthorized = true;
             socket.send('Welcome to CHATTRBOX!');
-            sendMessageArchive(socket);
+            sendMessagesArchive(socket);
          } else {
             socket.send('you are not Authorized, please enter the password:');
          };
@@ -48,8 +47,11 @@ ws.on('connection', (socket) => {
                clientSocket.send(data);
             };
          });
-      };
+         if (data.indexOf('Robo') !== -1){
+            chatBot.listenMessage(data, socket);
+         }
 
+      };
    });
 
 });
