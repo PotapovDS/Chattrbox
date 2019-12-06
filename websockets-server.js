@@ -47,6 +47,8 @@ ws.on('connection', (socket) => {
                clientSocket.send(data);
             };
          });
+         //если в сообщении есть обращение к боту, сообщение передается
+         // на обработку чатботу, и данные пользователя, которому нужно направить ответ
          if (data.indexOf('Robo') !== -1){
             chatBot.listenMessage(data, socket);
          }
