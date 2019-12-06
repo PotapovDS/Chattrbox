@@ -1,6 +1,7 @@
 'use strict';
 var WebSocket = require('ws');
 var WebSocketServer = WebSocket.Server;
+var chatBot = require('./src/chatbot');
 var port = 3001;
 var ws = new WebSocketServer({
    port: port
@@ -11,7 +12,7 @@ var messages = []; // хранилище сообщений
 
 console.log('websockets server started');
 
-function sendMessageArchive(socket) { //рассылаем архив сообщений новому подключению
+function sendMessagesArchive(socket) { //рассылаем архив сообщений новому подключению
    messages.forEach((msg) => {
       socket.send(msg);
    });
@@ -19,10 +20,12 @@ function sendMessageArchive(socket) { //рассылаем архив сообщ
 
 ws.on('connection', (socket) => {
    console.log('client connection established');
+
+   chatBot.sayHelloToNewUser(socket);
    socket.send('enter the password');
 
    if (socket.isAuthorized) {
-      sendMessageArchive(socket);
+      sendMessagesArchive(socket);
    };
 
    // эхо сервер
@@ -32,7 +35,7 @@ ws.on('connection', (socket) => {
          if (data === password) {
             socket.isAuthorized = true;
             socket.send('Welcome to CHATTRBOX!');
-            sendMessageArchive(socket);
+            sendMessagesArchive(socket);
          } else {
             socket.send('you are not Authorized, please enter the password:');
          };
@@ -44,8 +47,13 @@ ws.on('connection', (socket) => {
                clientSocket.send(data);
             };
          });
-      };
+         //если в сообщении есть обращение к боту, сообщение передается
+         // на обработку чатботу, и данные пользователя, которому нужно направить ответ
+         if (data.indexOf('Robo') !== -1){
+            chatBot.listenMessage(data, socket);
+         }
 
+      };
    });
 
 });
