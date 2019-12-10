@@ -1,7 +1,10 @@
+// переписать код, чтобы автоматические сообщение передавались в модуль ws-client
+// чтобы сообщение сериализовывалось в объект.
+
 'use strict';
 var WebSocket = require('ws');
 var WebSocketServer = WebSocket.Server;
-var chatBot = require('./src/chatbot');
+// var chatBot = require('./src/chatbot');
 var port = 3001;
 var ws = new WebSocketServer({
    port: port
@@ -21,8 +24,8 @@ function sendMessagesArchive(socket) { //рассылаем архив сооб�
 ws.on('connection', (socket) => {
    console.log('client connection established');
 
-   chatBot.sayHelloToNewUser(socket);
-   socket.send('enter the password');
+   // chatBot.sayHelloToNewUser(socket);
+   // socket.send('enter the password');
 
    if (socket.isAuthorized) {
       sendMessagesArchive(socket);
@@ -31,15 +34,16 @@ ws.on('connection', (socket) => {
    // эхо сервер
    socket.on('message', (data) => { // при получении сообщения добавляем его в хранилище
 
-      if (!socket.isAuthorized) {
-         if (data === password) {
-            socket.isAuthorized = true;
-            socket.send('Welcome to CHATTRBOX!');
-            sendMessagesArchive(socket);
-         } else {
-            socket.send('you are not Authorized, please enter the password:');
-         };
-      } else {
+      // if (!socket.isAuthorized) {
+      //    if (data === password) {
+      //       socket.isAuthorized = true;
+      //       socket.send('Welcome to CHATTRBOX!');
+      //       sendMessagesArchive(socket);
+      //    } else {
+      //       socket.send('you are not Authorized, please enter the password:');
+      //    };
+      // } else
+      {
          console.log('message received: ' + data);
          messages.push(data);
          ws.clients.forEach((clientSocket) => {
@@ -49,9 +53,9 @@ ws.on('connection', (socket) => {
          });
          //если в сообщении есть обращение к боту, сообщение передается
          // на обработку чатботу, и данные пользователя, которому нужно направить ответ
-         if (data.indexOf('Robo') !== -1){
-            chatBot.listenMessage(data, socket);
-         }
+         // if (data.indexOf('Robo') !== -1){
+         //    chatBot.listenMessage(data, socket);
+         // }
 
       };
    });

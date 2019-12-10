@@ -16,7 +16,7 @@ chatBot.listenMessage = function(message, socket) {
    var ansverMessage = "i don't understand you, sorry";
 
    if (message.indexOf("kill all humans") !== -1) {
-      ansverMessage = "Hello my brother!";
+      ansverMessage = "Hello brother!";
    };
 
    if (message.indexOf("fool") !== -1 || message.indexOf("stupid") !== -1) {
