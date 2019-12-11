@@ -27,13 +27,14 @@ ws.on('connection', (socket) => {
    // chatBot.sayHelloToNewUser(socket);
    // socket.send('enter the password');
 
-   if (socket.isAuthorized) {
-      sendMessagesArchive(socket);
-   };
+   // if (socket.isAuthorized) {
+   sendMessagesArchive(socket);
+   // };
 
    // эхо сервер
    socket.on('message', (data) => { // при получении сообщения добавляем его в хранилище
 
+// временно убрал требование авторизации для подключения
       // if (!socket.isAuthorized) {
       //    if (data === password) {
       //       socket.isAuthorized = true;
@@ -44,18 +45,18 @@ ws.on('connection', (socket) => {
       //    };
       // } else
       {
-         console.log('message received: ' + data);
+         // console.log('message received: ' + data);
          messages.push(data);
          ws.clients.forEach((clientSocket) => {
-            if (clientSocket.isAuthorized) {
-               clientSocket.send(data);
-            };
+            // if (clientSocket.isAuthorized) {
+            clientSocket.send(data);
+            // };
          });
-         //если в сообщении есть обращение к боту, сообщение передается
+         // если в сообщении есть обращение к боту, сообщение передается
          // на обработку чатботу, и данные пользователя, которому нужно направить ответ
-         // if (data.indexOf('Robo') !== -1){
-         //    chatBot.listenMessage(data, socket);
-         // }
+         if (data.indexOf('Robo') !== -1){
+            chatBot.listenMessage(data, socket);
+         }
 
       };
    });

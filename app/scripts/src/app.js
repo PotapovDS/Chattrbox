@@ -7,11 +7,20 @@ class ChatApp {
       socket.init('ws://localhost:3001');
 
       socket.registerOpenHandler(() => {
-         let message = new ChatMessage({message: 'pow!' });
+         let message = new ChatMessage({
+            message: 'pow!'
+         });
          socket.sendMessage(message.serialize());
       });
       socket.registerMessageHandler((data) => {
          console.log(data);
+      });
+      socket.registerCloseHandler(() => {
+         console.log('connection close');
+         setTimeout(() => {
+            console.log('attempt to connect');
+            socket.init('wss://localhost:3001');
+         }, 3000);
       });
    }
 }

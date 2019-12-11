@@ -15,7 +15,6 @@ function registerOpenHandler(handlerFunction) {
 }
 
 function registerMessageHandler(handlerFunction) {
-   console.log('registerMessageHandler');
    socket.onmessage = (e) => {   // ! не обрабатывается событие получения сообщения
       console.log('message', e.data);
       let data = JSON.parse(e.data);
@@ -27,9 +26,17 @@ function sendMessage(payload) {
    socket.send(JSON.stringify(payload));
 }
 
+function registerCloseHandler(handlerFunction) {
+   socket.onclose = (e) => {
+      console.log(e);
+      handlerFunction();
+   };
+}
+
 export default {
    init,
    registerOpenHandler,
    registerMessageHandler,
-   sendMessage
+   sendMessage,
+   registerCloseHandler
 }
