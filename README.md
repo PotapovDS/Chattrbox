@@ -1,4 +1,7 @@
 # Chattrbox
+
+перед запусом приложения не забудь сделать npm install
+
 Chat  = browser app + server
 
 start: npm run dev
