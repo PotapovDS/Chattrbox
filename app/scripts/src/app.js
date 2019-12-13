@@ -1,23 +1,28 @@
 'use strict';
 
 import socket from './ws-client';
+import {ChatForm} from './dom';
+
+const FORM_SELECTOR = '[data-chat="chat-form"]';
+const INPUT_SELECTOR = '[data-chat="message-input"]';
 
 class ChatApp {
    constructor() {
-      socket.init('ws://localhost:3001');
+      this.chatForm = new ChatForm(FORM_SELECTOR, INPUT_SELECTOR);
 
+      socket.init('ws://localhost:3001');
       socket.registerOpenHandler(() => {
-         let message = new ChatMessage({
-            message: 'pow!'
+         this.chatForm.init((data) => {
+            let message = new ChatMessage({message: data});
+            socket.sendMessage(message.serialize());
          });
-         socket.sendMessage(message.serialize());
       });
       socket.registerMessageHandler((data) => {
          console.log(data);
       });
       socket.registerCloseHandler(() => {
          console.log('connection close');
-         setTimeout(() => {
+         setInterval(() => {
             console.log('attempt to connect');
             socket.init('wss://localhost:3001');
          }, 3000);
