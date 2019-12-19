@@ -1,5 +1,5 @@
 'use strict';
-
+//  работа с DOM, отображение элементов и данных из формы
 import $ from 'jquery';
 import md5 from 'crypto-js/md5';
 import moment from 'moment';
@@ -40,7 +40,7 @@ export class ChatList {
       this.username = username;
    }
 
-   drawMessage({user: u, timestamp: t, message:m}) {
+   drawMessage({user: u, timestamp: t, message: m}) {
       let $messageRow = $('<li>', {
          'class': 'message-row'
       });
@@ -75,9 +75,15 @@ export class ChatList {
       $messageRow.append($img);
       $messageRow.append($message);
       this.$list.append($messageRow);
+      // атрибут и значение t - разные типы, для сравнения исп == для приведения типов
+      if ($messageRow.find('.timestamp').attr('data-time') == t) {
+         $messageRow.hide().fadeIn();
+      }
+
       $messageRow.get(0).scrollIntoView();
    }
 
+   //форматирование индикатора даты
    init() {
       this.timer = setInterval(() => {
          $('[data-time]').each((idx, element) => {
