@@ -18,7 +18,14 @@ if (!username) {
    userStore.set(username);
 }
 
-function sendMessageArchive (messageStore){}
+function saveMessagesToStorage (message){ //------ сохраняем сообщения в sessionStore
+   messageStore.set(messageStore.get()+ ', ' + JSON.stringify(message.serialize()));
+   console.log('messageStore', messageStore.get());
+}
+
+function sendMessageArchive (messageStore){
+   // рассылка архива сообщений из кэша sessonStore
+}
 
 class ChatApp {
    constructor() {
@@ -28,25 +35,26 @@ class ChatApp {
       socket.init('ws://localhost:3001');
 
       if (messageStore.get()) {
-
+         // если в кэше есть какие-то сообщения запускаем событие, например
+         // sendMessageArchive
       }
 
       socket.registerOpenHandler(() => {
          this.chatForm.init((data) => {
             let message = new ChatMessage({message: data});
             socket.sendMessage(message.serialize());
-            //------
-            messageStore.set(messageStore.get()+ ', ' + JSON.stringify(message.serialize()));
-            console.log('messageStore', messageStore.get());
-            //----
+            saveMessagesToStorage(message);
          });
+         
          this.chatList.init();
       });
+
       socket.registerMessageHandler((data) => {
          console.log('registerMessageHandler', data);
          let message = new ChatMessage(data);
          this.chatList.drawMessage(message.serialize());
       });
+
       socket.registerCloseHandler(() => {
          console.log('connection closed');
          setInterval(() => {
