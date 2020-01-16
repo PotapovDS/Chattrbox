@@ -23,6 +23,8 @@ body {
   flex-direction: column;
 }
 .chat-messages {
+  border: solid 1px;
+  border-radius: 4px;
    /* position: absolute; */
   flex: 3;
   overflow-y: auto;
