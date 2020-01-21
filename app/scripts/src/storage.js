@@ -13,6 +13,7 @@ class Store {
    }
 }
 
+//класс для создания хранилища списка активных юзеров
 export class UserStore extends Store {
    constructor(key) {
       super(sessionStorage);
@@ -20,6 +21,7 @@ export class UserStore extends Store {
    }
 }
 
+//класс для создания хранилища списка сообщений
 export class MessageStore extends Store {
    constructor(key) {
       super(sessionStorage);

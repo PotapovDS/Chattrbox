@@ -1,46 +1,67 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Chattrbox</title>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-  integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-  crossorigin="anonymous">
 
-    <link rel="stylesheet" href="/stylesheets/styles.css">
-  </head>
-  <body>
+<head>
+   <title>Chattrbox</title>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js">
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-     <header class="container chat-app-header">
-        <h1>Chattrbox</h1>
-     </header>
+   <link rel="stylesheet" href="/stylesheets/styles.css">
+</head>
 
-  <div class="container app">
+<body>
 
-    <div class="container chat-wrapper">
+   <header class="container chat-app-header">
+      <h1>Chattrbox</h1>
+   </header>
 
-      <div class="panel panel-default chat-messages">
-        <ul class="panel-body chat-message-list" data-chat="message-list"></ul>
+   <div class="container app">
+
+      <div class="container chat-wrapper">
+
+         <div class="panel panel-default chat-messages">
+            <ul class="panel-body chat-message-list" data-chat="message-list"></ul>
+         </div>
+
+         <section class="chat-input">
+            <form data-chat="chat-form" class="cb-container">
+               <div class="input-group">
+                  <label for="js-message-input" class="sr-only">Message:</label>
+                  <input type="text" class="form-control" data-chat="message-input" autofocus>
+                  <span class="input-group-btn">
+                     <button class="btn btn-default" type="button">Go!</button>
+                  </span>
+               </div><!-- /input-group -->
+            </form>
+         </section>
+
       </div>
+      <!-- модуль отображения списка юзеров, поставиь справа о чата -->
+      <div class="room-users-list">
 
-    <section class="chat-input">
-      <form data-chat="chat-form" class="cb-container">
-        <div class="input-group">
-          <label for="js-message-input" class="sr-only">Message:</label>
-          <input type="text" class="form-control" data-chat="message-input" autofocus>
-          <span class="input-group-btn">
-            <button class="btn btn-default" type="button">Go!</button>
-          </span>
-        </div><!-- /input-group -->
-      </form>
-    </section>
+         <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+               Change room
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+               <a class="dropdown-item" href="#">Main room</a>
+            </div>
+         </div>
 
-  </div>
-  <!-- модуль отображения списка юзеров, поставиь справа о чата -->
-  <div class="users-list">
+         <div class="this-room-name">
+            Main room
+         </div>
 
-  </div>
-</div>
+         <div class="users-in-this-room">
+         </div>
 
-    <script src="/scripts/dist/main.js"></script>
-  </body>
+      </div>
+   </div>
+
+   <script src="/scripts/dist/main.js"></script>
+   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+
 </html>
