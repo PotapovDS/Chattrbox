@@ -10,6 +10,7 @@ var ws = new WebSocketServer({
 
 var password = 'swordfish'; // общий пароль доступа к чату
 var messages = []; // хранилище сообщений
+var users = []; //хранилище списка активных юзеров
 
 console.log('websockets server started');
 
