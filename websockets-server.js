@@ -10,7 +10,7 @@ var ws = new WebSocketServer({
 
 var password = 'swordfish'; // общий пароль доступа к чату
 var messages = []; // хранилище сообщений
-var users = []; //хранилище списка активных юзеров
+var activeUsers = []; //хранилище списка активных юзеров
 
 console.log('websockets server started');
 
@@ -45,6 +45,13 @@ ws.on('connection', (socket) => {
       // } else
       {
          // console.log('message received: ' + data);
+
+         //вытягиваем из сообщения имя пользователя, если в списке активных его нет, добавляем
+         let user = JSON.parse(data).user;
+         if (activeUsers.indexOf(user) === -1) {
+            activeUsers.push(user);
+         }
+
          messages.push(data);
          ws.clients.forEach((clientSocket) => {
             // if (clientSocket.isAuthorized) {
@@ -60,8 +67,8 @@ ws.on('connection', (socket) => {
       };
    });
 
-});
+   socket.on('close', (event) => {
+      console.log('connection is closed' + event);
+   });
 
-ws.on('close', (event) => {
-   console.log(event.reason);
 });

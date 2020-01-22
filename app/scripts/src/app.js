@@ -20,7 +20,7 @@ if (!username) {
 
 function saveMessagesToStorage (message){ //------ сохраняем сообщения в sessionStore
    messageStore.set(messageStore.get()+ ', ' + JSON.stringify(message.serialize()));
-   console.log('messageStore', messageStore.get());
+   // console.log('messageStore', messageStore.get());
 }
 
 function sendMessageArchive (messageStore){
@@ -45,7 +45,7 @@ class ChatApp {
             socket.sendMessage(message.serialize());
             saveMessagesToStorage(message);
          });
-         
+
          this.chatList.init();
       });
 

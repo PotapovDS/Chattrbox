@@ -26,6 +26,7 @@ function sendMessage(payload) {
    socket.send(JSON.stringify(payload));
 }
 
+// функция обработки закрытия соединения
 function registerCloseHandler(handlerFunction) {
    socket.onclose = (e) => {
       console.log(e);
