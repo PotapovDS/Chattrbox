@@ -1,6 +1,5 @@
 'use strict';
 
-const db = require('../../mongodb');
 import socket from './ws-client';
 import {UserStore, MessageStore} from './storage';
 import {ChatForm, ChatList, promptForUsername} from './dom';

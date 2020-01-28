@@ -1,6 +1,6 @@
-
 'use strict';
 
+const User = require('./mongodb');
 var WebSocket = require('ws');
 var WebSocketServer = WebSocket.Server;
 // var chatBot = require('./src/chatbot');
@@ -11,7 +11,6 @@ var ws = new WebSocketServer({
 
 var password = 'swordfish'; // общий пароль доступа к чату
 var messages = []; // хранилище сообщений
-var activeUsers = []; //хранилище списка активных юзеров
 
 console.log('websockets server started');
 
@@ -34,7 +33,7 @@ ws.on('connection', (socket) => {
    // эхо сервер
    socket.on('message', (data) => { // при получении сообщения добавляем его в хранилище
 
-// временно убрал требование авторизации для подключения, потом завернуть этот кусок в функцию
+      // временно убрал требование авторизации для подключения, потом завернуть этот кусок в функцию
       // if (!socket.isAuthorized) {
       //    if (data === password) {
       //       socket.isAuthorized = true;
@@ -49,9 +48,19 @@ ws.on('connection', (socket) => {
 
          //вытягиваем из сообщения имя пользователя, если в списке активных его нет, добавляем
          let user = JSON.parse(data).user;
-         if (activeUsers.indexOf(user) === -1) {
-            activeUsers.push(user);
-         }
+
+         const newUser = new User({
+            username: user
+         });
+
+         newUser.save((err, user) => {
+            if (err) {
+               console.log('err', err)
+            }
+            console.log('saved user', user)
+         })
+
+         // console.log('new user', newUser);
 
          messages.push(data);
          ws.clients.forEach((clientSocket) => {
@@ -61,7 +70,7 @@ ws.on('connection', (socket) => {
          });
          // если в сообщении есть обращение к боту, сообщение передается
          // на обработку чатботу, и данные пользователя, которому нужно направить ответ
-         if (data.indexOf('Robo') !== -1){
+         if (data.indexOf('Robo') !== -1) {
             chatBot.listenMessage(data, socket);
          }
 

@@ -1,16 +1,19 @@
-var Mongoose = require('mongoose');
+var mongoose = require('mongoose');
 const url = 'mongodb://localhost:27017/usersDB';
 
-Mongoose.connect(url, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-   },
-   function(err) {
-      if (err) throw err;
-      console.log('successfully Connected');
-   });
+mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
 
-var userSchema = Mongoose.Schema({
+const db = mongoose.connection;
+
+db.on('error', err => {
+   console.log('error', err);
+});
+
+db.once('open', () => {
+   console.log('db connected');
+});
+
+var userSchema = mongoose.Schema({
    username: {
       type: String,
       required: true
@@ -25,7 +28,7 @@ var userSchema = Mongoose.Schema({
    }
 })
 
-var User = Mongoose.model('User', userSchema);
+var User = mongoose.model('User', userSchema);
 
 module.exports = User;
 //
