@@ -1,6 +1,11 @@
 'use strict';
 
-const User = require('./mongodb');
+// const User = require('./mongodb/schemas/User');
+// const Message = require('./mongodb/schemas/Message');
+
+const { User, Message } = require('./mongodb');
+// const Message = require('./mongodb');
+
 var WebSocket = require('ws');
 var WebSocketServer = WebSocket.Server;
 // var chatBot = require('./src/chatbot');
@@ -46,9 +51,13 @@ ws.on('connection', (socket) => {
       {
          // console.log('message received: ' + data);
 
-         //вытягиваем из сообщения имя пользователя, если в списке активных его нет, добавляем
-         let user = JSON.parse(data).user;
 
+// сообщение - data приходит в виде строки, необходимо парсить его
+// надо распарсить в объект, чтобы потом его разложить по схемам user и message
+         let user = JSON.parse(data).user;
+         let message = JSON.parse(data).message;
+
+//--------------тест базы данных -начало--------
          const newUser = new User({
             username: user
          });
@@ -57,10 +66,21 @@ ws.on('connection', (socket) => {
             if (err) {
                console.log('err', err)
             }
-            console.log('saved user', user)
-         })
+            console.log('saved user: \n', user)
+         });
 
-         // console.log('new user', newUser);
+         const newMessage = new Message({
+            text: message
+         });
+
+         newMessage.save((err, message) => {
+            if (err) {
+               console.log('err', err)
+            }
+            console.log('saved message: \n', message)
+         });
+
+//--------------тест базы данных -конец--------
 
          messages.push(data);
          ws.clients.forEach((clientSocket) => {
