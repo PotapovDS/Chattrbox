@@ -5,8 +5,7 @@ var messageSchema = mongoose.Schema({
       type: String
    },
    room: {
-      type: String,
-      default: 'Main'
+      type: String
    },
    created: {
       type: Date,

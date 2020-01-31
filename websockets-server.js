@@ -56,10 +56,13 @@ ws.on('connection', (socket) => {
 // надо распарсить в объект, чтобы потом его разложить по схемам user и message
          let user = JSON.parse(data).user;
          let message = JSON.parse(data).message;
+         let room = JSON.parse(data).room;
+
 
 //--------------тест базы данных -начало--------
          const newUser = new User({
-            username: user
+            username: user,
+            room: room
          });
 
          newUser.save((err, user) => {
@@ -70,14 +73,16 @@ ws.on('connection', (socket) => {
          });
 
          const newMessage = new Message({
-            text: message
+            text: message,
+            username: user,
+            room: room
          });
 
          newMessage.save((err, message) => {
             if (err) {
-               console.log('err', err)
+               console.log('err', err);
             }
-            console.log('saved message: \n', message)
+            console.log(`saved message: \n ${user} : ${message} in ${room}`);
          });
 
 //--------------тест базы данных -конец--------

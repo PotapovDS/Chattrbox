@@ -9,6 +9,7 @@ function createGravatarUrl(username) {
    return `http://www.gravatar.com/avatar/${userhash.toString()}`;
 }
 
+//запрашиваем имя пользователя
 export function promptForUsername() {
    let username = prompt('Enter a username');
    return username.toLowerCase();

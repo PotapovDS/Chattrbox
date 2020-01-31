@@ -28,3 +28,11 @@ export class MessageStore extends Store {
       this.key = key;
    }
 }
+
+//класс для хранения значения комнаты в котрой находится юзер
+export class RoomStore extends Store {
+  constructor(key) {
+    super(sessionStorage);
+    this.key = key;
+  }
+}

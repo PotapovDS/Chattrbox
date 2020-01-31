@@ -1,21 +1,29 @@
 'use strict';
 
 import socket from './ws-client';
-import {UserStore, MessageStore} from './storage';
+import {UserStore, MessageStore, RoomStore} from './storage';
 import {ChatForm, ChatList, promptForUsername} from './dom';
 
 const FORM_SELECTOR = '[data-chat="chat-form"]';
 const INPUT_SELECTOR = '[data-chat="message-input"]';
 const LIST_SELECTOR = '[data-chat="message-list"]';
 
-let userStore = new UserStore('x-chatrtbox/u');
-let messageStore = new MessageStore('x-chatrtbox/m');
+let userStore = new UserStore('x-chattrbox/u');
+let messageStore = new MessageStore('x-chattrbox/m');
+let roomStore = new RoomStore('x-chattrbox/r')
 
 let username = userStore.get();
+let room = roomStore.get();  // значение по умолчанию
 
+// если в хранилище имен пусто, промптом запрашиваем пользователя ввести имя
 if (!username) {
    username = promptForUsername();
    userStore.set(username);
+}
+
+if (!room) {
+   room = 'Main room';
+   roomStore.set(room);
 }
 
 function saveMessagesToStorage (message){ //------ сохраняем сообщения в sessionStore
@@ -55,9 +63,10 @@ class ChatApp {
          this.chatList.drawMessage(message.serialize());
       });
 
+      // обрабатывается событие закрытия соединения с сервером
       socket.registerCloseHandler(() => {
          console.log('connection closed');
-         setInterval(() => {
+         setTimeout(() => {
             console.log('attempt to connect');
             socket.init('wss://localhost:3001');
          }, 3000);
@@ -69,17 +78,20 @@ class ChatMessage {
    constructor({
       message: m,
       user: u = username,
+      room: r = room,
       timestamp: t = (new Date()).getTime()
    }) {
       this.message = m;
       this.user = u;
       this.timestamp = t;
+      this.room = r;
    }
    serialize() {
       return {
          user: this.user,
          message: this.message,
-         timestamp: this.timestamp
+         timestamp: this.timestamp,
+         room: this.room
       };
    }
 }

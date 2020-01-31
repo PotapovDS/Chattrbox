@@ -8,7 +8,6 @@ var userSchema = mongoose.Schema({
    },
    room: {
       type: String,
-      default: 'Main'
    },
    created: {
       type: Date,

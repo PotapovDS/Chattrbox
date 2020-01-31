@@ -15,8 +15,7 @@ function registerOpenHandler(handlerFunction) {
 }
 
 function registerMessageHandler(handlerFunction) {
-   socket.onmessage = (e) => {   // ! не обрабатывается событие получения сообщения
-      // console.log('message', e.data);
+   socket.onmessage = (e) => {
       let data = JSON.parse(e.data);
       handlerFunction(data);
    };
