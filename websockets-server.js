@@ -48,10 +48,8 @@ ws.on('connection', (socket) => {
       //       socket.send('you are not Authorized, please enter the password:');
       //    };
       // } else
+
       {
-         // console.log('message received: ' + data);
-
-
 // сообщение - data приходит в виде строки, необходимо парсить его
 // надо распарсить в объект, чтобы потом его разложить по схемам user и message
          let user = JSON.parse(data).user;
@@ -87,6 +85,7 @@ ws.on('connection', (socket) => {
 
 //--------------тест базы данных -конец--------
 
+        // рассылка сообщений каждому клиенту
          messages.push(data);
          ws.clients.forEach((clientSocket) => {
             // if (clientSocket.isAuthorized) {
@@ -95,9 +94,9 @@ ws.on('connection', (socket) => {
          });
          // если в сообщении есть обращение к боту, сообщение передается
          // на обработку чатботу, и данные пользователя, которому нужно направить ответ
-         if (data.indexOf('Robo') !== -1) {
-            chatBot.listenMessage(data, socket);
-         }
+         // if (data.indexOf('Robo') !== -1) {
+         //    chatBot.listenMessage(data, socket);
+         // }
 
       };
    });

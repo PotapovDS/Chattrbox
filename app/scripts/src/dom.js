@@ -15,6 +15,21 @@ export function promptForUsername() {
    return username.toLowerCase();
 }
 
+export function changeRoom() {
+  // событие смены комнаты
+  $('.dropdown-toggle').on('click', () => console.log($(this)));
+
+  console.log($('.dropdown-toggle'));
+}
+
+export class UsersList {
+  constructor(formSel, room) {
+    this.$form = $(formSel);
+    this.room = room;
+  }
+  // обработка отображения списка юзеров в комнате room
+}
+
 //обработка ввода сообщения из формы ввода
 export class ChatForm {
    constructor(formSel, inputSel) {
