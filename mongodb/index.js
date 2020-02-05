@@ -18,3 +18,4 @@ db.once('open', () => {
 
 exports.User = User;
 exports.Message = Message;
+exports.DB = mongoose;

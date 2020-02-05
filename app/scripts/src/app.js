@@ -27,8 +27,7 @@ if (!room) {
   roomStore.set(room);
 }
 
-room = changeRoom(room);
-roomStore.set(room);
+roomStore.set(changeRoom(room));
 // при переходе в другую комнату, должно меняться значение room
 //в объекте пользователья в базе
 
