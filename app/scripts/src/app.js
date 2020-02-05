@@ -22,23 +22,15 @@ if (!username) {
    userStore.set(username);
 }
 
-changeRoom();
-
 if (!room) {
-   room = 'Main room';
-   roomStore.set(room);
+  room = 'Main room';
+  roomStore.set(room);
 }
 
-// сообщения будут храниться в базе на сервере, хранение сообщений пока уберем,
-// они в любом случае будут хранитсья на странице, пока та не закроется
-// function saveMessagesToStorage (message){ //------ сохраняем сообщения в sessionStore
-//    messageStore.set(messageStore.get()+ ', ' + JSON.stringify(message.serialize()));
-//    // console.log('messageStore', messageStore.get());
-// }
-//
-// function sendMessageArchive (messageStore){
-//    // рассылка архива сообщений из кэша sessonStore
-// }
+room = changeRoom(room);
+roomStore.set(room);
+// при переходе в другую комнату, должно меняться значение room
+//в объекте пользователья в базе
 
 class ChatApp {
    constructor() {
@@ -48,16 +40,10 @@ class ChatApp {
 
       socket.init('ws://localhost:3001');
 
-      // if (messageStore.get()) {
-      //    // если в кэше есть какие-то сообщения запускаем событие, например
-      //    // sendMessageArchive
-      // }
-
       socket.registerOpenHandler(() => {
          this.chatForm.init((data) => { // data - значение из поля ввода сообщений
             let message = new ChatMessage({message: data});
             socket.sendMessage(message.serialize());
-            // saveMessagesToStorage(message);
          });
 
          this.chatList.init();

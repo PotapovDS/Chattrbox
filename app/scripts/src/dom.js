@@ -15,11 +15,13 @@ export function promptForUsername() {
    return username.toLowerCase();
 }
 
-export function changeRoom() {
+export function changeRoom(room) {
   // событие смены комнаты
-  $('.dropdown-toggle').on('click', () => console.log($(this)));
-
-  console.log($('.dropdown-toggle'));
+  $('.dropdown-menu').on('click', (e) => {
+    room = e.target.text;
+    $('.this-room-name').text(room);
+  });
+  return room;
 }
 
 export class UsersList {
