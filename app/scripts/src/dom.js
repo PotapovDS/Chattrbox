@@ -18,10 +18,20 @@ export function promptForUsername() {
 export function changeRoom(room) {
   // событие смены комнаты
   $('.dropdown-menu').on('click', (e) => {
-    room = e.target.text;
-    $('.this-room-name').text(room);
+    if (room !== e.target.text) {
+      room = e.target.text;
+
+      $('.this-room-name').text(room);
+
+      $('[data-chat="message-list"]').append($('<div>', {
+         'class': 'message-newRoom',
+         text: 'Welcome to ' + room
+      }));
+
+    }
+    
+    return room;
   });
-  return room;
 }
 
 export class UsersList {

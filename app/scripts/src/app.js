@@ -13,8 +13,9 @@ const USERS_LIST_SELECTOR = '[users-list]';
 let userStore = new UserStore('x-chattrbox/u');
 let roomStore = new RoomStore('x-chattrbox/r')
 
+let room = 0;
 let username = userStore.get();
-let room = roomStore.get();  // значение по умолчанию
+// let room = roomStore.get();  // значение по умолчанию
 
 // если в хранилище имен пусто, промптом запрашиваем пользователя ввести имя
 if (!username) {
@@ -22,14 +23,15 @@ if (!username) {
    userStore.set(username);
 }
 
+// необходимо добавить обработчик событий при смене комнаты,
+//иначе код ниже срабатывает только при первом запуске страницы
 if (!room) {
   room = 'Main room';
   roomStore.set(room);
-}
-
-roomStore.set(changeRoom(room));
-// при переходе в другую комнату, должно меняться значение room
-//в объекте пользователья в базе
+};
+room = changeRoom(room);
+roomStore.set(room);
+//----------------------------------------------
 
 class ChatApp {
    constructor() {
@@ -52,7 +54,9 @@ class ChatApp {
       socket.registerMessageHandler((data) => {
          console.log('registerMessageHandler', data);
          let message = new ChatMessage(data);
-         this.chatList.drawMessage(message.serialize());
+         if (message.room === room) {
+           this.chatList.drawMessage(message.serialize());
+         };
       });
 
       // обрабатывается событие закрытия соединения с сервером

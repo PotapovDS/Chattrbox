@@ -103,6 +103,10 @@ ul, ul.panel-body {
   text-align: right;
 }
 
+.message-newRoom {
+  
+}
+
 .message-username {
   font-weight: bold;
 }

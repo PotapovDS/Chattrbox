@@ -3,11 +3,7 @@
 // const User = require('./mongodb/schemas/User');
 // const Message = require('./mongodb/schemas/Message');
 
-const {
-  User,
-  Message,
-  DB
-} = require('./mongodb');
+const {User, Message} = require('./mongodb');
 // const Message = require('./mongodb');
 
 var WebSocket = require('ws');
@@ -33,7 +29,6 @@ console.log('websockets server started');
 // добавляем в базу только нового пользователя
 function registerNewUser(users, messageData) {
   if (users.length === 0) {
-    console.log('user is not found in database');
     const newUser = new User({
       username: messageData.user,
       room: messageData.room
