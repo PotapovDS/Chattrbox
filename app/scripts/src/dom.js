@@ -15,25 +15,6 @@ export function promptForUsername() {
    return username.toLowerCase();
 }
 
-export function changeRoom(room) {
-  // событие смены комнаты
-  $('.dropdown-menu').on('click', (e) => {
-    if (room !== e.target.text) {
-      room = e.target.text;
-
-      $('.this-room-name').text(room);
-
-      $('[data-chat="message-list"]').append($('<div>', {
-         'class': 'message-newRoom',
-         text: 'Welcome to ' + room
-      }));
-
-    }
-    
-    return room;
-  });
-}
-
 export class UsersList {
   constructor(formSel, room) {
     this.$form = $(formSel);
@@ -42,7 +23,27 @@ export class UsersList {
   // обработка отображения списка юзеров в комнате room
 }
 
-//обработка ввода сообщения из формы ввода
+export class RoomChanger {
+  constructor(formSel, room){
+    this.$form = $(formSel);
+    this.room = room;
+  }
+  init(submitCallback) {
+    this.$form.on('click', (e) => {
+      if (this.room !== e.target.text) {
+        this.room = e.target.text;
+
+        $('.this-room-name').text(this.room);
+        $('[data-chat="message-list"]').append($('<div>', {
+           'class': 'message-newRoom',
+           text: 'Welcome to ' + this.room
+        }));
+      }
+      submitCallback(this.room);
+    });
+  }
+}
+
 export class ChatForm {
    constructor(formSel, inputSel) {
       this.$form = $(formSel);

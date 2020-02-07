@@ -3,7 +3,10 @@
 // const User = require('./mongodb/schemas/User');
 // const Message = require('./mongodb/schemas/Message');
 
-const {User, Message} = require('./mongodb');
+const {
+  User,
+  Message
+} = require('./mongodb');
 // const Message = require('./mongodb');
 
 var WebSocket = require('ws');
@@ -16,7 +19,7 @@ var ws = new WebSocketServer({
 
 var password = 'swordfish'; // общий пароль доступа к чату
 var messages = []; // хранилище сообщений
-var user = []; // список пользователей
+var users = []; // список пользователей
 
 console.log('websockets server started');
 
@@ -27,20 +30,29 @@ console.log('websockets server started');
 // };
 
 // добавляем в базу только нового пользователя
-function registerNewUser(users, messageData) {
-  if (users.length === 0) {
-    const newUser = new User({
-      username: messageData.user,
-      room: messageData.room
-    });
+function registerNewUser(thisUser, messageData) {
+  const newUser = new User({
+    username: messageData.user,
+    room: messageData.room
+  });
+  newUser.save((err, newUser) => {
+    if (err) {
+      console.log('err', err)
+    }
+    console.log('saved user: \n', newUser)
+  });
 
-    newUser.save((err, user) => {
-      if (err) {
-        console.log('err', err)
-      }
-      console.log('saved user: \n', user)
-    });
-  }
+  users.push(newUser.username);
+}
+
+function updateUser(messageData){
+  User.findOne({
+    username: messageData.user
+  }, (err, updatedUser) => {
+    if (err) return handleError(err);
+    updatedUser.room = messageData.room;
+    updatedUser.save();
+  });
 }
 
 ws.on('connection', (socket) => {
@@ -75,11 +87,15 @@ ws.on('connection', (socket) => {
       let messageData = JSON.parse(data);
 
       //--------------тест базы данных -начало--------
-      User.find({
+      User.findOne({
         username: messageData.user
-      }).exec(function(err, users) {
+      }).exec(function(err, thisUser) {
         if (err) throw err;
-        registerNewUser(users, messageData);
+        if (thisUser.length === 0) {
+          registerNewUser(thisUser, messageData);
+        } else {
+          updateUser(messageData);
+        };
       });
 
       const newMessage = new Message({
@@ -88,6 +104,8 @@ ws.on('connection', (socket) => {
         room: messageData.room,
         timestamp: messageData.timestamp
       });
+
+
 
       newMessage.save((err, message) => {
         if (err) {

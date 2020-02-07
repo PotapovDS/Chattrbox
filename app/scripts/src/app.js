@@ -2,12 +2,13 @@
 
 import socket from './ws-client';
 import {UserStore, MessageStore, RoomStore} from './storage';
-import {ChatForm, ChatList, UsersList, promptForUsername, changeRoom} from './dom';
+import {ChatForm, ChatList, UsersList, RoomChanger, promptForUsername, changeRoom} from './dom';
 
 const FORM_SELECTOR = '[data-chat="chat-form"]';
 const INPUT_SELECTOR = '[data-chat="message-input"]';
 const LIST_SELECTOR = '[data-chat="message-list"]';
 const USERS_LIST_SELECTOR = '[users-list]';
+const ROOM_SELECTOR = '.dropdown-menu';
 
 // let messageStore = new MessageStore('x-chattrbox/m');
 let userStore = new UserStore('x-chattrbox/u');
@@ -15,7 +16,6 @@ let roomStore = new RoomStore('x-chattrbox/r')
 
 let room = 0;
 let username = userStore.get();
-// let room = roomStore.get();  // значение по умолчанию
 
 // если в хранилище имен пусто, промптом запрашиваем пользователя ввести имя
 if (!username) {
@@ -23,28 +23,32 @@ if (!username) {
    userStore.set(username);
 }
 
-// необходимо добавить обработчик событий при смене комнаты,
-//иначе код ниже срабатывает только при первом запуске страницы
 if (!room) {
   room = 'Main room';
   roomStore.set(room);
 };
-room = changeRoom(room);
-roomStore.set(room);
-//----------------------------------------------
 
 class ChatApp {
    constructor() {
       this.chatForm = new ChatForm(FORM_SELECTOR, INPUT_SELECTOR);
       this.chatList = new ChatList(LIST_SELECTOR, username);
       this.usersList = new UsersList(USERS_LIST_SELECTOR, room);
+      this.roomChanger = new RoomChanger(ROOM_SELECTOR, room);
 
       socket.init('ws://localhost:3001');
 
       socket.registerOpenHandler(() => {
+
          this.chatForm.init((data) => { // data - значение из поля ввода сообщений
             let message = new ChatMessage({message: data});
             socket.sendMessage(message.serialize());
+         });
+
+         //меняем значение room новое значение получаем из обработчика
+         // dropdown
+         this.roomChanger.init((data) => {
+           room = data;
+           roomStore.set(room);
          });
 
          this.chatList.init();
@@ -54,7 +58,7 @@ class ChatApp {
       socket.registerMessageHandler((data) => {
          console.log('registerMessageHandler', data);
          let message = new ChatMessage(data);
-         if (message.room === room) {
+         if (message.room === roomStore.get()) {
            this.chatList.drawMessage(message.serialize());
          };
       });
