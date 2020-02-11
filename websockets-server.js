@@ -45,13 +45,15 @@ function registerNewUser(thisUser, messageData) {
   users.push(newUser.username);
 }
 
-function updateUser(messageData){
+function updateUser(messageData) {
   User.findOne({
     username: messageData.user
   }, (err, updatedUser) => {
     if (err) return handleError(err);
-    updatedUser.room = messageData.room;
-    updatedUser.save();
+    if (updatedUser !== null) {
+      updatedUser.room = messageData.room;
+      updatedUser.save();
+    }
   });
 }
 
@@ -91,7 +93,8 @@ ws.on('connection', (socket) => {
         username: messageData.user
       }).exec(function(err, thisUser) {
         if (err) throw err;
-        if (thisUser.length === 0) {
+        console.log(!!thisUser);
+        if (thisUser === 0) {
           registerNewUser(thisUser, messageData);
         } else {
           updateUser(messageData);
