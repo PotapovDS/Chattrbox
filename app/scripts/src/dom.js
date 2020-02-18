@@ -21,8 +21,10 @@ export class UsersList {
     this.room = room;
   }
   // обработка отображения списка юзеров в комнате room
+  // сначала удаляем старый список, затем рисуем новый
 }
 
+// обработка выбора комнаты
 export class RoomChanger {
   constructor(formSel, room){
     this.$form = $(formSel);

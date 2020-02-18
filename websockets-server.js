@@ -3,21 +3,16 @@
 // const User = require('./mongodb/schemas/User');
 // const Message = require('./mongodb/schemas/Message');
 
-const {
-  User,
-  Message
-} = require('./mongodb');
+const { User, Message } = require('./mongodb');
 // const Message = require('./mongodb');
 
 var WebSocket = require('ws');
 var WebSocketServer = WebSocket.Server;
 // var chatBot = require('./src/chatbot');
 var port = 3001;
-var ws = new WebSocketServer({
-  port: port
-});
+var ws = new WebSocketServer({ port: port });
 
-var password = 'swordfish'; // общий пароль доступа к чату
+// var password = 'swordfish'; // общий пароль доступа к чату
 var messages = []; // хранилище сообщений
 var users = []; // список пользователей
 
@@ -50,10 +45,25 @@ function updateUser(messageData) {
     username: messageData.user
   }, (err, updatedUser) => {
     if (err) return handleError(err);
-    if (updatedUser !== null) {
-      updatedUser.room = messageData.room;
-      updatedUser.save();
+    console.log('updating user');
+    updatedUser.room = messageData.room;
+    updatedUser.save();
+    });
+}
+
+function saveNewMessage(messageData){
+  const newMessage = new Message({
+    text: messageData.message,
+    username: messageData.user,
+    room: messageData.room,
+    timestamp: messageData.timestamp
+  });
+
+  newMessage.save((err, message) => {
+    if (err) {
+      console.log('err', err);
     }
+    console.log(`saved message: \n ${messageData.user} : ${messageData.message} in ${messageData.room}`);
   });
 }
 
@@ -85,39 +95,26 @@ ws.on('connection', (socket) => {
     {
       // сообщение - data приходит в виде строки, необходимо парсить его
       // надо распарсить в объект, чтобы потом его разложить по схемам user и message
+      console.log('soket on message - data', data);
 
       let messageData = JSON.parse(data);
 
-      //--------------тест базы данных -начало--------
+      // проверяем есть ли юзер в базе
       User.findOne({
         username: messageData.user
       }).exec(function(err, thisUser) {
         if (err) throw err;
-        console.log(!!thisUser);
-        if (thisUser === 0) {
+        if (thisUser === null) {
           registerNewUser(thisUser, messageData);
-        } else {
-          updateUser(messageData);
         };
       });
 
-      const newMessage = new Message({
-        text: messageData.message,
-        username: messageData.user,
-        room: messageData.room,
-        timestamp: messageData.timestamp
-      });
-
-
-
-      newMessage.save((err, message) => {
-        if (err) {
-          console.log('err', err);
-        }
-        console.log(`saved message: \n ${messageData.user} : ${messageData.message} in ${messageData.room}`);
-      });
-
-      //--------------тест базы данных -конец--------
+      //проверяем сообщение, системное или нет
+      if (messageData.systemMessage){
+        updateUser(messageData);
+      } else {
+        saveNewMessage(messageData);
+      }
 
       // рассылка сообщений каждому клиенту
       messages.push(data);

@@ -47,8 +47,15 @@ class ChatApp {
          //меняем значение room новое значение получаем из обработчика
          // dropdown
          this.roomChanger.init((data) => {
+           // здесь нужно передать данные на сервер о смене комнаты
            room = data;
-           roomStore.set(room);
+           roomStore.set(room); // меняем значение комнаты в session store
+           let messageToChangeRoom = {
+             room: room,
+             systemMessage: true,
+             user: userStore.get()
+           }
+           socket.sendMessage(messageToChangeRoom);
          });
 
          this.chatList.init();
@@ -76,11 +83,13 @@ class ChatApp {
 
 class ChatMessage {
    constructor({
+      systemMessage: s = false,
       message: m,
       user: u = username,
       room: r = room,
       timestamp: t = (new Date()).getTime()
    }) {
+      this.systemMessage = s
       this.message = m;
       this.user = u;
       this.timestamp = t;
@@ -88,6 +97,7 @@ class ChatMessage {
    }
    serialize() { //сборка сообщения по шаблону
       return {
+         systemMessage: this.systemMessage,
          user: this.user,
          message: this.message,
          timestamp: this.timestamp,
