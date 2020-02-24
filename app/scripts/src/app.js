@@ -7,7 +7,7 @@ import {ChatForm, ChatList, UsersList, RoomChanger, promptForUsername, changeRoo
 const FORM_SELECTOR = '[data-chat="chat-form"]';
 const INPUT_SELECTOR = '[data-chat="message-input"]';
 const LIST_SELECTOR = '[data-chat="message-list"]';
-const USERS_LIST_SELECTOR = '[users-list]';
+const USERS_LIST_SELECTOR = '.users-list';
 const ROOM_SELECTOR = '.dropdown-menu';
 
 // let messageStore = new MessageStore('x-chattrbox/m');
@@ -51,14 +51,16 @@ class ChatApp {
            room = data;
            roomStore.set(room); // меняем значение комнаты в session store
            let messageToChangeRoom = {
-             room: room,
              systemMessage: true,
+             room: room,
              user: userStore.get()
-           }
+           };
            socket.sendMessage(messageToChangeRoom);
          });
 
          this.chatList.init();
+         this.usersList.drawUsers(users);
+
       });
 
       // регистрация события отправки сообщения и отрисовка его на странице

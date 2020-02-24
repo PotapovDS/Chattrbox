@@ -40,7 +40,20 @@ function registerNewUser(thisUser, messageData) {
   users.push(newUser.username);
 }
 
+function drawUsersList(room){
+  User.find({
+    room: room
+  }, (err, users) => {
+    if (err) return handleError(err);
+    // оправляем обновленный список юзеров, в указанной комнае, клиенту
+
+    //
+  });
+
+}
+
 function updateUser(messageData) {
+
   User.findOne({
     username: messageData.user
   }, (err, updatedUser) => {
@@ -49,6 +62,7 @@ function updateUser(messageData) {
     updatedUser.room = messageData.room;
     updatedUser.save();
     });
+
 }
 
 function saveNewMessage(messageData){

@@ -20,6 +20,19 @@ export class UsersList {
     this.$form = $(formSel);
     this.room = room;
   }
+
+  drawUsers(users){
+    let $usersList = $('<p>');
+
+    users.map((user) => {
+      $usersList.append($('<span>', {
+         'class': 'username',
+         text: user
+      }));
+    });
+
+      this.$form.append($usersList);
+  }
   // обработка отображения списка юзеров в комнате room
   // сначала удаляем старый список, затем рисуем новый
 }
