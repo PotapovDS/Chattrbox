@@ -23,8 +23,7 @@ export class UsersList {
 
   drawUsers(users){
     let $usersList = $('<p>');
-
-    users.map((user) => {
+    users.forEach((user) => {
       $usersList.append($('<span>', {
          'class': 'username',
          text: user

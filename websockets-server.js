@@ -1,14 +1,8 @@
 'use strict';
-
-// const User = require('./mongodb/schemas/User');
-// const Message = require('./mongodb/schemas/Message');
-
 const { User, Message } = require('./mongodb');
-// const Message = require('./mongodb');
 
 var WebSocket = require('ws');
 var WebSocketServer = WebSocket.Server;
-// var chatBot = require('./src/chatbot');
 var port = 3001;
 var ws = new WebSocketServer({ port: port });
 
@@ -18,14 +12,7 @@ var users = []; // список пользователей
 
 console.log('websockets server started');
 
-// function sendMessagesArchive(socket) { //рассылаем архив сообщений новому подключению
-//   messages.forEach((msg) => {
-//     socket.send(msg);
-//   });
-// };
-
-// добавляем в базу только нового пользователя
-function registerNewUser(thisUser, messageData) {
+function registerNewUser(thisUser, messageData) { // добавляем в базу только нового пользователя
   const newUser = new User({
     username: messageData.user,
     room: messageData.room
@@ -40,20 +27,16 @@ function registerNewUser(thisUser, messageData) {
   users.push(newUser.username);
 }
 
-function drawUsersList(room){
+function drawUsersList(room){ // оправляем обновленный список юзеров, в указанной комнае, клиенту
   User.find({
     room: room
   }, (err, users) => {
     if (err) return handleError(err);
-    // оправляем обновленный список юзеров, в указанной комнае, клиенту
-
-    //
+    // отправка списка users
   });
-
 }
 
 function updateUser(messageData) {
-
   User.findOne({
     username: messageData.user
   }, (err, updatedUser) => {
@@ -62,7 +45,6 @@ function updateUser(messageData) {
     updatedUser.room = messageData.room;
     updatedUser.save();
     });
-
 }
 
 function saveNewMessage(messageData){
@@ -84,15 +66,6 @@ function saveNewMessage(messageData){
 ws.on('connection', (socket) => {
   console.log('client connection established');
 
-  // chatBot.sayHelloToNewUser(socket);
-  // socket.send('enter the password');
-
-  // if (socket.isAuthorized) {
-  // };
-  // возможно лишняя функция, нет смысла отправлять весь архив новому пользователю
-  // sendMessagesArchive(socket);
-
-  // эхо сервер
   socket.on('message', (data) => { // при получении сообщения добавляем его в хранилище
 
     // временно убрал требование авторизации для подключения, потом завернуть этот кусок в функцию
@@ -126,6 +99,10 @@ ws.on('connection', (socket) => {
       //проверяем сообщение, системное или нет
       if (messageData.systemMessage){
         updateUser(messageData);
+        // системное сообщение говорит о смене комнаты
+        // значит здесь можно инициировать отправку ws клиенту сообщения со списком юзера
+        // но нам нужно отправить только тому сокету, на который отправлено сообщение
+        console.log('попробуем узнать можно ли выяснить нужный на сокет', ws);
       } else {
         saveNewMessage(messageData);
       }
@@ -135,13 +112,9 @@ ws.on('connection', (socket) => {
       ws.clients.forEach((clientSocket) => {
         // if (clientSocket.isAuthorized) {
         clientSocket.send(data);
+        console.log('clientSocket', clientSocket);
         // };
       });
-      // если в сообщении есть обращение к боту, сообщение передается
-      // на обработку чатботу, и данные пользователя, которому нужно направить ответ
-      // if (data.indexOf('Robo') !== -1) {
-      //    chatBot.listenMessage(data, socket);
-      // }
 
     };
   });

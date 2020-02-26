@@ -59,12 +59,15 @@ class ChatApp {
          });
 
          this.chatList.init();
-         this.usersList.drawUsers(users);
+
+         // this.usersList.drawUsers(users); // сюда нужно передать список юзеров из БД с сервера
 
       });
 
       // регистрация события отправки сообщения и отрисовка его на странице
       socket.registerMessageHandler((data) => {
+        //  при регистраци ответа от сервера можно проверить тип ответа -
+        // просто сообщение или системное со списком юзера
          console.log('registerMessageHandler', data);
          let message = new ChatMessage(data);
          if (message.room === roomStore.get()) {
