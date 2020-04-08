@@ -1,19 +1,20 @@
+/* eslint-disable no-console */
 const mongoose = require('mongoose');
-var User = require('./schemas/User');
-var Message = require('./schemas/Message');
+const User = require('./schemas/User');
+const Message = require('./schemas/Message');
 
 const url = 'mongodb://localhost:27017/usersDB';
 
-mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const db = mongoose.connection;
 
-db.on('error', err => {
-   console.log('error', err);
+db.on('error', (err) => {
+  console.log('error', err);
 });
 
 db.once('open', () => {
-   console.log('db connected');
+  console.log('db connected');
 });
 
 exports.User = User;

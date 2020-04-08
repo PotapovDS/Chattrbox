@@ -7,8 +7,7 @@ Chat  = browser app + server
 start: npm run dev
 babel: npm run watch
 
-
-использован протокол WebSocets, для обработки сообщений
+использован протокол WebSocets
 
 модуль moment для управлением отображения времени отправки сообщения
 
