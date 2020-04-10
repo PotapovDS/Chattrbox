@@ -3,7 +3,18 @@ html, body {
 }
 
 body {
-  padding-bottom: 10px
+  padding-bottom: 10px;
+  height: 100%
+}
+
+.app {
+   display: flex;
+   flex-direction: row;
+   height: 90%;
+}
+
+.chat-app-header {
+   padding-left: 30px;
 }
 
 .chat-wrapper {
@@ -12,6 +23,9 @@ body {
   flex-direction: column;
 }
 .chat-messages {
+  border: solid 1px;
+  border-radius: 4px;
+   /* position: absolute; */
   flex: 3;
   overflow-y: auto;
 }
@@ -41,6 +55,41 @@ ul, ul.panel-body {
   /* flex: auto; */
 }
 
+.input-group {
+   border: solid 1px;
+   border-radius: 4px;
+   margin-top: 4px;
+}
+
+.room-users-list {
+   border: solid 1px;
+   border-radius: 4px;
+   width: 30%;
+   box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+
+.dropdown {
+   display: flex;
+   width: 100%;
+}
+
+#dropdownMenuButton {
+   display: flex;
+   width: 100%;
+}
+
+.this-room-name {
+   margin: 30px;
+   text-align: center;
+}
+
+.users-in-this-room {
+   overflow-y: auto;
+
+}
+
+
+
 .me {
   /* justify-content: flex-end; */
   flex-direction: row-reverse;      }
@@ -52,6 +101,10 @@ ul, ul.panel-body {
 
 .me p {
   text-align: right;
+}
+
+.message-newRoom {
+  
 }
 
 .message-username {

@@ -13,6 +13,7 @@ class Store {
    }
 }
 
+//класс для создания хранилища списка активных юзеров в sessionStorage
 export class UserStore extends Store {
    constructor(key) {
       super(sessionStorage);
@@ -20,9 +21,18 @@ export class UserStore extends Store {
    }
 }
 
+//класс для создания хранилища списка сообщений в sessionStorage
 export class MessageStore extends Store {
    constructor(key) {
       super(sessionStorage);
       this.key = key;
    }
+}
+
+//класс для хранения значения комнаты в котрой находится юзер
+export class RoomStore extends Store {
+  constructor(key) {
+    super(sessionStorage);
+    this.key = key;
+  }
 }
