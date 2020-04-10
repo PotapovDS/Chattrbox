@@ -22,18 +22,26 @@ export class UsersList {
   }
 
   drawUsersList(usersList) {
+    // обработка отображения списка юзеров в комнате room
+    // сначала удаляем старый список, затем рисуем новый, здесь нужен react
+    $('.username').remove();
     const $usersList = $('<p>');
-    usersList.forEach((user) => {
+
+    if (!usersList || usersList.length === 0) {
       $usersList.append($('<span>', {
         class: 'username',
-        text: user,
+        text: 'room is empty',
       }));
-    });
-
+    } else {
+      usersList.forEach((user) => {
+        $usersList.append($('<span>', {
+          class: 'username',
+          text: user.username,
+        }));
+      });
+    }
     this.$form.append($usersList);
   }
-  // обработка отображения списка юзеров в комнате room
-  // сначала удаляем старый список, затем рисуем новый
 }
 
 // обработка выбора комнаты

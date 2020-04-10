@@ -8,6 +8,7 @@ const ws = new WebSocketServer({ port });
 // var password = 'swordfish'; // общий пароль доступа к чату
 let messages = []; // хранилище сообщений
 let users = []; // список пользователей
+let usersList;
 
 console.log('websockets server started');
 
@@ -27,14 +28,13 @@ function registerNewUser(thisUser, messageData) { // добавляем в ба�
 }
 
 async function drawUsersList(room) { // оправляем обновленный список юзеров
-  let usersList;
   await User.find({ // await - необходимо завершить поиск, до возврата результата
     room,
   }, (err, findUsers) => {
     if (err) throw err;
     usersList = findUsers;
   });
-  return usersList; // ? возвращается промис
+  console.log(`мы нашли список пользователей в комнате ${room}: ${usersList}`);
 }
 
 function updateUser(messageData) {
@@ -96,8 +96,7 @@ ws.on('connection', (socket) => {
       if (messageData.systemMessage) {
         updateUser(messageData);
         // нужно взять комнату из messageData и передать в drawUsersList
-        const usersList = drawUsersList(messageData.room);
-        console.log(`usersList = ${usersList}`);
+        drawUsersList(messageData.room).then();
         const systemCallback = {
           usersList,
           user: messageData.user,
@@ -107,7 +106,6 @@ ws.on('connection', (socket) => {
         data = JSON.stringify(systemCallback);
         // системное сообщение говорит о смене комнаты
         // значит здесь можно инициировать отправку ws клиенту сообщения со списком юзеров
-        // но нам нужно отправить только тому сокету, на который отправлено сообщение
       } else {
         saveNewMessage(messageData);
         messages.push(data); // если сообщение не системное,сохраняем с пользовательскими сообщениями
@@ -115,7 +113,6 @@ ws.on('connection', (socket) => {
       // рассылка сообщений каждому клиенту
       ws.clients.forEach((clientSocket) => {
         // if (clientSocket.isAuthorized) {
-        console.log(data);
         clientSocket.send(data);
         // };
       });
