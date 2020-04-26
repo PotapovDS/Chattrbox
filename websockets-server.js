@@ -27,7 +27,7 @@ function registerNewUser(thisUser, messageData) { // добавляем в ба�
   users.push(newUser.username);
 }
 
-async function drawUsersList(room) { // оправляем обновленный список юзеров
+async function drawUsersList(room) { // отправляем обновленный список юзеров
   await User.find({ // await - необходимо завершить поиск, до возврата результата
     room,
   }, (err, findUsers) => {
